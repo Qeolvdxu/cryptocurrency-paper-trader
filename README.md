@@ -1,1 +1,1 @@
-# cryptocurrency-paper-trader
+# Cryptocurrency Paper Trader
