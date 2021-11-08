@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Base64;
 
 /**
  *
@@ -28,7 +29,8 @@ public class Account {
             
         // Read password
         System.out.println("Enter password: ");
-        password =  input.nextLine();
+        // Encrypt password
+        password =  encryptCredentials(input.nextLine());
         
         // Create account file and save info
         try {
@@ -65,36 +67,41 @@ public class Account {
         System.out.println("Enter username: ");
         String tempUsername =  input.nextLine();
         
-        
         // Read password
-        System.out.println("Enter password: ");
-        String tempPassword =  input.nextLine();
+        System.out.println("Enter password: "); 
+       // Encrypt entered password
+        String tempPassword =  encryptCredentials(input.nextLine());
         
         // Validate username and password
         try {
+            // Find the file in the accounts directory
             File dir = new File("accounts");
             dir.mkdirs();
             File accountFile = new File(dir, tempUsername + ".txt");
             Scanner fileReader = new Scanner(accountFile);
-            String accountCredentials = fileReader.nextLine();
-            
-            if (validateCredentials(accountCredentials)) {
-                System.out.println(username + " logged in successfully.");
+            // Parse saved password from file
+            String savedPassword = fileReader.nextLine();
+            savedPassword = savedPassword.substring(savedPassword.indexOf(":")+1);
+            // Does newly entered password match the saved password
+            if (savedPassword.equals(tempPassword)) {
+                System.out.println(tempUsername + " logged in successfully.");
             } else {
                 System.out.println("Incorrect password");
             }
-            
             fileReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("Account not found");
         }
         
     }
+    
     /**
-     * Validates the password information
-     * @param credentials in "username:password" format. 
+     * Encrypts the password 
+     * @param password to be encrypted
+     * @return encrypted password
      */
-    private boolean validateCredentials(String credentials) {
-        return credentials.equals(username + ":" + password);
+    private String encryptCredentials(String password) {
+        String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+        return encryptedPassword;
     }
 }
