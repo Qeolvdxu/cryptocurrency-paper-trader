@@ -1,13 +1,12 @@
 package com.mycompany.cs321.project;
 
 /**
- *
+ * Main driver class that initializes the program. 
  * @author Connor Stewart, ..., 
  */
 public class ClientInterface {
     public static void main(String[] args) {
-        Account acc1 = new Account();
-        acc1.createAccount();
-        acc1.logIn();
+        TradingReferee trade = new TradingReferee();
+        trade.run();    
     }
 }

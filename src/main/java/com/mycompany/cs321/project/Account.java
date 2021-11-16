@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.Base64;
 
 /**
- *
+ * Handles the creation and login of user accounts. Each account has their 
+ * own file with their credentials, balance, and order information. 
  * @author Connor Stewart, ..., 
  */
 public class Account {
-    String username;
-    String password;
+    public String username;
+    private String password;
     static Scanner input = new Scanner(System.in);
     
     /**
@@ -22,7 +23,7 @@ public class Account {
      * accounts directory.
      */
     public void createAccount() {
-        System.out.println("[Create Account]");
+        System.out.println("\n-- Create Account --");
         // Read username
         System.out.println("Enter username: ");
         username =  input.nextLine();
@@ -41,9 +42,9 @@ public class Account {
             // Create file if it doesn't exist 
             File accountFile = new File(dir, username + ".txt");
             if (accountFile.createNewFile()) {
-                System.out.println("File created: " + accountFile.getName());
+                System.out.println("Account created: " + accountFile.getName());
             } else {
-                System.out.println("File already exists.");
+                System.out.println("Account already exists.");
             }
             
             try ( // Save account information to file
@@ -61,8 +62,8 @@ public class Account {
      * username and password. Then checks for and opens the corresponding
      * account file and validates the login information. 
      */
-    public void logIn() {
-        System.out.println("[Log in]");
+    public boolean logIn() {
+        System.out.println("\n-- Log in --");
         // Read username
         System.out.println("Enter username: ");
         String tempUsername =  input.nextLine();
@@ -80,19 +81,24 @@ public class Account {
             File accountFile = new File(dir, tempUsername + ".txt");
             Scanner fileReader = new Scanner(accountFile);
             // Parse saved password from file
-            String savedPassword = fileReader.nextLine();
-            savedPassword = savedPassword.substring(savedPassword.indexOf(":")+1);
+            String accountInfo = fileReader.nextLine();
+            String savedPassword = accountInfo.substring(accountInfo.indexOf(":")+1);
             // Does newly entered password match the saved password
             if (savedPassword.equals(tempPassword)) {
-                System.out.println(tempUsername + " logged in successfully.");
+                // Logged in state
+                username = tempUsername;
+                password = tempPassword;
             } else {
                 System.out.println("Incorrect password");
+                return false;
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("Account not found");
+            return false;
         }
-        
+        System.out.println();
+        return true;
     }
     
     /**
