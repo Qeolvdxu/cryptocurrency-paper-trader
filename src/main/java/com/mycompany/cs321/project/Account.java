@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.ArrayList;
 
 /**
  * Handles the creation and login of user accounts. Each account has their 
@@ -13,9 +14,22 @@ import java.util.Base64;
  * @author Connor Stewart, ..., 
  */
 public class Account {
+    static Scanner input = new Scanner(System.in);
     public String username;
     private String password;
-    static Scanner input = new Scanner(System.in);
+    private double balanceUSD;
+    private double balanceBTC;
+    private double balanceETH;
+    private ArrayList<Order> orderArray;
+    private File accountFile;
+    
+    public Account() {
+        this.username = "";
+        this.password = "";
+        this.balanceUSD = 1000.00000000;
+        this.balanceBTC = 0.00000000;
+        this.balanceETH = 0.00000000;
+    }
     
     /**
      * Prompts the user for console input to create an account using an
@@ -40,27 +54,26 @@ public class Account {
             dir.mkdirs();
             
             // Create file if it doesn't exist 
-            File accountFile = new File(dir, username + ".txt");
+            this.accountFile = new File(dir, username + ".txt");
             if (accountFile.createNewFile()) {
-                System.out.println("Account created: " + accountFile.getName());
+                System.out.println("Account created: " + accountFile.getName() + "\n");
             } else {
-                System.out.println("Account already exists.");
+                System.out.println("Account already exists.\n");
             }
             
-            try ( // Save account information to file
-                    FileWriter writer = new FileWriter(accountFile)) {
-                writer.write(username + ":" + password);
-            }
+            // Save account information to file      
+            saveAccountInfo();
         } catch(IOException e) {
-            System.out.println("Error occurred.");
+            System.out.println("Error occurred.\n");
         }
         System.out.println();
     }
     
     /**
      * Prompts the user for console input to login to an account using an
-     * username and password. Then checks for and opens the corresponding
+     * username and password.Then checks for and opens the corresponding
      * account file and validates the login information. 
+     * @return true if user successfully logs in, false otherwise
      */
     public boolean logIn() {
         System.out.println("\n-- Log in --");
@@ -78,7 +91,7 @@ public class Account {
             // Find the file in the accounts directory
             File dir = new File("accounts");
             dir.mkdirs();
-            File accountFile = new File(dir, tempUsername + ".txt");
+            this.accountFile = new File(dir, tempUsername + ".txt");
             Scanner fileReader = new Scanner(accountFile);
             // Parse saved password from file
             String accountInfo = fileReader.nextLine();
@@ -86,15 +99,15 @@ public class Account {
             // Does newly entered password match the saved password
             if (savedPassword.equals(tempPassword)) {
                 // Logged in state
-                username = tempUsername;
-                password = tempPassword;
+                this.username = tempUsername;
+                this.password = tempPassword;
             } else {
-                System.out.println("Incorrect password");
+                System.out.println("Incorrect password\n");
                 return false;
             }
             fileReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Account not found");
+            System.out.println("Account not found\n");
             return false;
         }
         System.out.println();
@@ -109,5 +122,46 @@ public class Account {
     private String encryptCredentials(String password) {
         String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
         return encryptedPassword;
+    }
+    
+    /**
+     * Save account information to file.
+     * @throws IOException if file cant be written to. 
+     */
+    public void saveAccountInfo() throws IOException{
+        FileWriter writer = new FileWriter(accountFile);
+        writer.write(username + ":" + password + "\n");
+        writer.write(balanceUSD + "\n");
+        writer.write(balanceBTC + "\n");
+        writer.write(balanceETH + "\n");
+        writer.close();
+    }
+    /**
+     * Load account information from file.
+     * @throws IOException if file cant be read.
+     */
+    public void loadAccountInfo() throws IOException{
+        Scanner fileReader = new Scanner(accountFile);
+        String accountInfo = fileReader.nextLine();
+        this.balanceUSD = Float.parseFloat(fileReader.nextLine());
+        this.balanceBTC = Float.parseFloat(fileReader.nextLine());
+        this.balanceETH = Float.parseFloat(fileReader.nextLine());
+    }
+    /**
+     * Display account info.
+     */
+    public void printAccountInfo() {
+        System.out.println("\n-- Balances -- ");
+        System.out.println("USD:" + this.balanceUSD);
+        System.out.println("BTC:" + this.balanceBTC);
+        System.out.println("ETH:" + this.balanceETH);
+        System.out.println();
+    }
+    /**
+     * Test method for seeing if increasing a balance reflects in the file. 
+     */
+    public void testIncreaseBalance() {
+        System.out.println("\nIncreased Balance by 1");
+        this.balanceUSD += 1;
     }
 }
