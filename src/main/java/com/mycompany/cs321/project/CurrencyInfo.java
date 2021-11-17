@@ -34,7 +34,7 @@ public class CurrencyInfo {
         if (selection == 1) {
             this.name = "Bitcoin";
             this.symbol = "BTC";
-            this.price = 61997.80;
+            this.price = 59944.70;
         } else if (selection == 2) {
             this.name = "Ethereum";
             this.symbol = "ETH";

@@ -1,5 +1,6 @@
 package com.mycompany.cs321.project;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -67,6 +68,12 @@ public class TradingReferee {
             case 2:
                 if (user.logIn()) {
                     state = DASHBOARD_MENU;
+                    try {
+                        // Load user info after successful login
+                        user.loadAccountInfo();
+                    } catch (IOException e) {
+                        System.out.println("Error loading account info");
+                    }
                 }
                 break;
             case 3:
@@ -76,16 +83,16 @@ public class TradingReferee {
     }
     /**
      * Main menu once user is logged in, dashboard to all features.
-     * TODO: Order menu
-     * TODO: Add account info section: username, balances, list orders
      */
     public void dashboardMenu() {
-        System.out.println("-- Trading Menu --");
+        System.out.println("-- Dashboard Menu --");
         System.out.println("-- User: " + user.username + " --");
         System.out.println(
             "1) Select Cryptocurrency - Current Selection: " + currentCurrency.name + "\n" +
-            "2) Place Order\n" +
-            "3) Log out"
+            "2) View Account Info\n" +
+            "3) Place Order\n" +
+            "4) Log out\n" +
+            "5) Test Buying $100 Bitcoin"
         );
         
         int selection = userInput.nextInt();
@@ -98,20 +105,33 @@ public class TradingReferee {
                 state = SELECT_CRYPTO_MENU;
                 break;
             case 2:
-                System.out.println("-- Place Order Menu --");
+                user.printAccountInfo();
                 break;
             case 3:
+                System.out.println("-- Place Order Menu --");
+                break;
+            case 4:
                 System.out.println();
                 state = LOGIN_MENU;
+                break;
+            case 5:
+                user.testBuyBitcoin(currentCurrency);
+                try {
+                    // Save user info after increasing balance
+                    user.saveAccountInfo();
+                } catch (IOException e) {
+                    System.out.println("Error saving file");
+                }
+                break;  
         }  
     }
     /**
-     * Select cryptocurrency submenu. Initializes currentCurrency to the 
+     * Select cryptocurrency sub-menu. Initializes currentCurrency to the 
      * user selected cryptocurrency. 
      * TODO: Add more supported currencies. 
      */
     public void selectCryptoMenu() {
-        System.out.println("-- Select Cryptocurrency Menu --");
+        System.out.println("\n-- Select Cryptocurrency Menu --");
         System.out.println("Selected: " + currentCurrency.name);
         
         System.out.println(
