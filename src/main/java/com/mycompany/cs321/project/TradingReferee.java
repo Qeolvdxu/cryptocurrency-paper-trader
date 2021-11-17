@@ -2,8 +2,6 @@ package com.mycompany.cs321.project;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Holds the state of the program and 
@@ -94,7 +92,7 @@ public class TradingReferee {
             "2) View Account Info\n" +
             "3) Place Order\n" +
             "4) Log out\n" +
-            "5) Test Increasing Balance"
+            "5) Test Buying $100 Bitcoin"
         );
         
         int selection = userInput.nextInt();
@@ -117,7 +115,7 @@ public class TradingReferee {
                 state = LOGIN_MENU;
                 break;
             case 5:
-                user.testIncreaseBalance();
+                user.testBuyBitcoin(currentCurrency);
                 try {
                     // Save user info after increasing balance
                     user.saveAccountInfo();

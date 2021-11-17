@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 /**
  * Handles the creation and login of user accounts. Each account has their 
@@ -151,17 +152,21 @@ public class Account {
      * Display account info.
      */
     public void printAccountInfo() {
+        DecimalFormat df = new DecimalFormat("#.########");
+        
         System.out.println("\n-- Balances -- ");
-        System.out.println("USD:" + this.balanceUSD);
-        System.out.println("BTC:" + this.balanceBTC);
-        System.out.println("ETH:" + this.balanceETH);
+        System.out.println("USD:" + df.format(this.balanceUSD));
+        System.out.println("BTC:" + df.format(this.balanceBTC));
+        System.out.println("ETH:" + df.format(this.balanceETH));
         System.out.println();
     }
     /**
      * Test method for seeing if increasing a balance reflects in the file. 
+     * @param currentCurrency
      */
-    public void testIncreaseBalance() {
-        System.out.println("\nIncreased Balance by 1");
-        this.balanceUSD += 1;
+    public void testBuyBitcoin(CurrencyInfo currentCurrency) {
+        this.balanceUSD -= 100;
+        this.balanceBTC += (100 / currentCurrency.price);
+        System.out.println("\nBought $100 Bitcoin");
     }
 }
