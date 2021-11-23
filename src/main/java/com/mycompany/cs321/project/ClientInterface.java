@@ -5,6 +5,11 @@ package com.mycompany.cs321.project;
  * @author Connor Stewart, ..., 
  */
 public class ClientInterface {
+
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         TradingReferee trade = new TradingReferee();
         trade.run();    

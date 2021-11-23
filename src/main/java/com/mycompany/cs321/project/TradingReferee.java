@@ -12,6 +12,8 @@ public class TradingReferee {
     private final Account user; 
     private CurrencyInfo currentCurrency;
     private final Scanner userInput = new Scanner(System.in);
+    //LoginMenu log = new LoginMenu();
+    
     // State of program, and which menu/submenu to currently display. 
     private int state;
     private static final int LOGIN_MENU = 0;
@@ -22,6 +24,7 @@ public class TradingReferee {
     public TradingReferee() {
         this.user = new Account();
         this.currentCurrency = new CurrencyInfo();
+        // Start GUI
         // Starting menu
         state = LOGIN_MENU;
     }
