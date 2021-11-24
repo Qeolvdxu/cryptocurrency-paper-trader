@@ -12,6 +12,8 @@ public class TradingReferee {
     private final Account user; 
     private CurrencyInfo currentCurrency;
     private final Scanner userInput = new Scanner(System.in);
+    //LoginMenu log = new LoginMenu();
+    
     // State of program, and which menu/submenu to currently display. 
     private int state;
     private static final int LOGIN_MENU = 0;
@@ -22,6 +24,7 @@ public class TradingReferee {
     public TradingReferee() {
         this.user = new Account();
         this.currentCurrency = new CurrencyInfo();
+        // Start GUI
         // Starting menu
         state = LOGIN_MENU;
     }
@@ -86,9 +89,9 @@ public class TradingReferee {
      */
     public void dashboardMenu() {
         System.out.println("-- Dashboard Menu --");
-        System.out.println("-- User: " + user.username + " --");
+        System.out.println("-- User: " + user.getUsername() + " --");
         System.out.println(
-            "1) Select Cryptocurrency - Current Selection: " + currentCurrency.name + "\n" +
+            "1) Select Cryptocurrency - Current Selection: " + currentCurrency.getName() + "\n" +
             "2) View Account Info\n" +
             "3) Place Order\n" +
             "4) Log out\n" +
@@ -132,7 +135,7 @@ public class TradingReferee {
      */
     public void selectCryptoMenu() {
         System.out.println("\n-- Select Cryptocurrency Menu --");
-        System.out.println("Selected: " + currentCurrency.name);
+        System.out.println("Selected: " + currentCurrency.getName());
         
         System.out.println(
             "1) Bitcoin, BTC\n" +

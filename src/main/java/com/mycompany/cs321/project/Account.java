@@ -16,15 +16,16 @@ import java.text.DecimalFormat;
  */
 public class Account {
     static Scanner input = new Scanner(System.in);
-    public String username;
+    private String username;
     private String password;
-    private double balanceUSD;
-    private double balanceBTC;
-    private double balanceETH;
+    public double balanceUSD;
+    public double balanceBTC;
+    public double balanceETH;
     private ArrayList<Order> orderArray;
     private File accountFile;
     
     public Account() {
+        // Default values for an account
         this.username = "";
         this.password = "";
         this.balanceUSD = 1000.00000000;
@@ -41,12 +42,12 @@ public class Account {
         System.out.println("\n-- Create Account --");
         // Read username
         System.out.println("Enter username: ");
-        username =  input.nextLine();
+        setUsername(input.nextLine());
             
         // Read password
         System.out.println("Enter password: ");
         // Encrypt password
-        password =  encryptCredentials(input.nextLine());
+        setPassword(encryptCredentials(input.nextLine()));
         
         // Create account file and save info
         try {
@@ -55,7 +56,7 @@ public class Account {
             dir.mkdirs();
             
             // Create file if it doesn't exist 
-            this.accountFile = new File(dir, username + ".txt");
+            this.accountFile = new File(dir, getUsername() + ".txt");
             if (accountFile.createNewFile()) {
                 System.out.println("Account created: " + accountFile.getName() + "\n");
             } else {
@@ -66,6 +67,49 @@ public class Account {
             saveAccountInfo();
         } catch(IOException e) {
             System.out.println("Error occurred.\n");
+        }
+        System.out.println();
+    }
+    
+    /**
+     * Uses the LoginMenu GUI Form to create an account using an
+     * username and password.Then saves this information in a file in the 
+     * accounts directory.
+     * @param username
+     * @param password
+     */
+    public void createAccount(String username, String password) {
+        // Test for filled fields
+        if (username.equals("") || password.equals("")) {
+            LoginMenu.statusLabel.setText("Enter username and password");
+            return;
+        }
+        // Save username
+        setUsername(username);
+        
+        // Encrypt password
+        setPassword(encryptCredentials(password));
+        
+        // Create account file and save info
+        try {
+            // Create directory if it doesn't exist
+            File dir = new File("accounts");
+            dir.mkdirs();
+            
+            // Create file if it doesn't exist 
+            this.accountFile = new File(dir, getUsername() + ".txt");
+            if (accountFile.createNewFile()) {
+                LoginMenu.statusLabel.setText("Account created: " + accountFile.getName() + "\n");
+                LoginMenu.usernameField.setText("");
+                LoginMenu.passwordField.setText("");
+            } else {
+                LoginMenu.statusLabel.setText("Account already exists.\n");
+            }
+            
+            // Save account information to file      
+            saveAccountInfo();
+        } catch(IOException e) {
+            LoginMenu.statusLabel.setText("Error occurred, try again.\n");
         }
         System.out.println();
     }
@@ -100,8 +144,8 @@ public class Account {
             // Does newly entered password match the saved password
             if (savedPassword.equals(tempPassword)) {
                 // Logged in state
-                this.username = tempUsername;
-                this.password = tempPassword;
+                setUsername(tempUsername);
+                setPassword(tempPassword);
             } else {
                 System.out.println("Incorrect password\n");
                 return false;
@@ -112,6 +156,51 @@ public class Account {
             return false;
         }
         System.out.println();
+        return true;
+    }
+    
+    /**
+     * Uses the LoginMenu GUI Form to create an account using an
+     * username and password. Then checks for and opens the corresponding
+     * account file and validates the login information. 
+     * @param username
+     * @param password
+     * @return true if user successfully logs in, false otherwise
+     */
+    public boolean logIn(String username, String password) {
+        String tempUsername =  username;
+        
+        // Encrypt entered password
+        String tempPassword =  encryptCredentials(password);
+        
+        // Validate username and password
+        try {
+            // Find the file in the accounts directory
+            File dir = new File("accounts");
+            dir.mkdirs();
+            this.accountFile = new File(dir, tempUsername + ".txt");
+            Scanner fileReader = new Scanner(accountFile);
+            // Parse saved password from file
+            String accountInfo = fileReader.nextLine();
+            String savedPassword = accountInfo.substring(accountInfo.indexOf(":")+1);
+            // Does newly entered password match the saved password
+            if (savedPassword.equals(tempPassword)) {
+                // Logged in state
+                setUsername(tempUsername);
+                setPassword(tempPassword);
+            } else {
+                // Clear password field if entered incorrectly
+                LoginMenu.statusLabel.setText("Incorrect password\n");
+                LoginMenu.passwordField.setText("");
+                return false;
+            }
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            LoginMenu.statusLabel.setText("Account not found\n");
+            LoginMenu.passwordField.setText("");
+            return false;
+        }
+        LoginMenu.statusLabel.setText("Logged in: " + getUsername());
         return true;
     }
     
@@ -149,7 +238,7 @@ public class Account {
         this.balanceETH = Float.parseFloat(fileReader.nextLine());
     }
     /**
-     * Display account info.
+     * Display account info to console. 
      */
     public void printAccountInfo() {
         DecimalFormat df = new DecimalFormat("#.########");
@@ -166,7 +255,30 @@ public class Account {
      */
     public void testBuyBitcoin(CurrencyInfo currentCurrency) {
         this.balanceUSD -= 100;
-        this.balanceBTC += (100 / currentCurrency.price);
-        System.out.println("\nBought $100 Bitcoin");
+        this.balanceBTC += (100 / currentCurrency.getPrice());
+    }
+    
+    /**
+     * gets account username
+     * @return username
+     */
+    public String getUsername() {
+        return this.username;
+    }
+    
+    /**
+     * sets account username
+     * @param username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * sets account password
+     * @param password that has been encoded
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
