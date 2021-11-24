@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.cs321.project;
 
 import java.io.IOException;
@@ -11,8 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author conno
+ * Main trading dashboard menu where the business logic is executed. 
+ * @author Connor Stewart, ..., 
  */
 public class DashboardMenu extends javax.swing.JFrame {
     private Account currentUser;
@@ -27,7 +22,7 @@ public class DashboardMenu extends javax.swing.JFrame {
     }
     
     /**
-     * Creates new form DashboardMenu
+     * Creates new form DashboardMenu.
      * @param user that has logged in successfully
      */
     public DashboardMenu(Account user) {
@@ -40,10 +35,13 @@ public class DashboardMenu extends javax.swing.JFrame {
         initComponents();
         updateAccountInfo();
     }
-    
+    /**
+     * Update the account info from the file to the GUI display.
+     */
     private void updateAccountInfo() {
-        userLabel.setText(currentUser.username);
-        
+        // Show who is logged in
+        userLabel.setText(currentUser.getUsername());
+        // Format balance display labels with 8 decimal places
         DecimalFormat df = new DecimalFormat("#.########");
         usdBalanceLabel.setText("USD: " + df.format(currentUser.balanceUSD));
         btcBalanceLabel.setText("BTC: " + df.format(currentUser.balanceBTC));
@@ -184,26 +182,36 @@ public class DashboardMenu extends javax.swing.JFrame {
         int selection = selectCryptoComboBox.getSelectedIndex();
         switch (selection) {
             case 0: // None
+                // Dont show anything until cryptocurrency is selected
                 currentCurrency = null;
                 this.selectCryptoLabel.setText("");
                 break;
             case 1: // BTC
                 currentCurrency = new CurrencyInfo(selection);
-                this.selectCryptoLabel.setText(currentCurrency.name + ": $" + currentCurrency.price);
+                this.selectCryptoLabel.setText(currentCurrency.getName() + ": $" + currentCurrency.getPrice());
                 break;
             case 2: // ETH
                 currentCurrency = new CurrencyInfo(selection);
-                this.selectCryptoLabel.setText(currentCurrency.name + ": $" + currentCurrency.price);
+                this.selectCryptoLabel.setText(currentCurrency.getName() + ": $" + currentCurrency.getPrice());
                 break;
         }   
     }//GEN-LAST:event_selectCryptoComboBoxActionPerformed
-
+    
+    /**
+     * Closes the dashboard and returns to the login menu
+     * @param evt MouseEvent from logout button being clicked
+     */
     private void logoutButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseClicked
         this.setVisible(false);
+        // TODO: Fix not making a new form, instead reopen the old one.
         LoginMenu log = new LoginMenu();
         log.setVisible(true);
     }//GEN-LAST:event_logoutButtonMouseClicked
-
+    
+    /**
+     * Test to emulate a trade of buying $100 of bitcoin
+     * @param evt MouseEvent from test buying bitcoin button being clicked
+     */
     private void testBuyBitcoinButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_testBuyBitcoinButtonMouseClicked
         currentUser.testBuyBitcoin(currentCurrency);
         updateAccountInfo();
@@ -215,6 +223,7 @@ public class DashboardMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_testBuyBitcoinButtonMouseClicked
     
 //    /**
+//     * Unused main method, the form is started from LoginMenu on successful login. 
 //     * @param args the command line arguments
 //     */
 //    public static void main(String args[]) {

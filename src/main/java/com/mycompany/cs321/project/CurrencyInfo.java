@@ -6,9 +6,9 @@ package com.mycompany.cs321.project;
  */
 public class CurrencyInfo {
     
-    String name;
-    String symbol;
-    double price;
+    private String name;
+    private String symbol;
+    private double price;
     
     /**
      * Initializes cryptocurrency based upon the API. 
@@ -40,5 +40,17 @@ public class CurrencyInfo {
             this.symbol = "ETH";
             this.price = 4386.39;
         }
+    }
+    
+    public String getName() {
+        return this.name; 
+    }
+    
+    public String getSymbol() {
+        return this.symbol; 
+    }
+    
+    public double getPrice() {
+        return this.price; 
     }
 }

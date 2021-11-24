@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.cs321.project;
 
 /**
- *
- * @author conno
+ * Initial menu displayed when program starts to handle account creation and login. 
+ * @author Connor Stewart, ..., 
  */
 public class LoginMenu extends javax.swing.JFrame {
     Account user = new Account();
-    
     
     /**
      * Creates new form LoginMenu
@@ -92,11 +86,19 @@ public class LoginMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Tries to create user with entered credentials upon clicking the button.
+     * @param evt Login button clicked event
+     */
     private void createAccountButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccountButtonMouseClicked
         user.createAccount(usernameField.getText(), passwordField.getText());
     }//GEN-LAST:event_createAccountButtonMouseClicked
-
+    
+    /**
+     * Tries to login user with entered credentials upon clicking the button.
+     * If successful, switch to main trading dashboard. 
+     * @param evt Login button clicked event
+     */
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
         if (user.logIn(usernameField.getText(), passwordField.getText())) {
             this.setVisible(false);
@@ -106,6 +108,7 @@ public class LoginMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_loginButtonMouseClicked
 
     /**
+     * Main method to start GUI form of program. 
      * @param args the command line arguments
      */
     public static void main(String args[]) {

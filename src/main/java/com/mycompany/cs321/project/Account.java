@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
  */
 public class Account {
     static Scanner input = new Scanner(System.in);
-    public String username;
+    private String username;
     private String password;
     public double balanceUSD;
     public double balanceBTC;
@@ -25,6 +25,7 @@ public class Account {
     private File accountFile;
     
     public Account() {
+        // Default values for an account
         this.username = "";
         this.password = "";
         this.balanceUSD = 1000.00000000;
@@ -41,12 +42,12 @@ public class Account {
         System.out.println("\n-- Create Account --");
         // Read username
         System.out.println("Enter username: ");
-        username =  input.nextLine();
+        setUsername(input.nextLine());
             
         // Read password
         System.out.println("Enter password: ");
         // Encrypt password
-        password =  encryptCredentials(input.nextLine());
+        setPassword(encryptCredentials(input.nextLine()));
         
         // Create account file and save info
         try {
@@ -55,7 +56,7 @@ public class Account {
             dir.mkdirs();
             
             // Create file if it doesn't exist 
-            this.accountFile = new File(dir, username + ".txt");
+            this.accountFile = new File(dir, getUsername() + ".txt");
             if (accountFile.createNewFile()) {
                 System.out.println("Account created: " + accountFile.getName() + "\n");
             } else {
@@ -83,11 +84,11 @@ public class Account {
             LoginMenu.statusLabel.setText("Enter username and password");
             return;
         }
-        
-        this.username = username;
+        // Save username
+        setUsername(username);
         
         // Encrypt password
-        this.password =  encryptCredentials(password);
+        setPassword(encryptCredentials(password));
         
         // Create account file and save info
         try {
@@ -96,7 +97,7 @@ public class Account {
             dir.mkdirs();
             
             // Create file if it doesn't exist 
-            this.accountFile = new File(dir, username + ".txt");
+            this.accountFile = new File(dir, getUsername() + ".txt");
             if (accountFile.createNewFile()) {
                 LoginMenu.statusLabel.setText("Account created: " + accountFile.getName() + "\n");
                 LoginMenu.usernameField.setText("");
@@ -143,8 +144,8 @@ public class Account {
             // Does newly entered password match the saved password
             if (savedPassword.equals(tempPassword)) {
                 // Logged in state
-                this.username = tempUsername;
-                this.password = tempPassword;
+                setUsername(tempUsername);
+                setPassword(tempPassword);
             } else {
                 System.out.println("Incorrect password\n");
                 return false;
@@ -159,8 +160,8 @@ public class Account {
     }
     
     /**
-     * Prompts the user for console input to login to an account using an
-     * username and password.Then checks for and opens the corresponding
+     * Uses the LoginMenu GUI Form to create an account using an
+     * username and password. Then checks for and opens the corresponding
      * account file and validates the login information. 
      * @param username
      * @param password
@@ -185,9 +186,10 @@ public class Account {
             // Does newly entered password match the saved password
             if (savedPassword.equals(tempPassword)) {
                 // Logged in state
-                this.username = tempUsername;
-                this.password = tempPassword;
+                setUsername(tempUsername);
+                setPassword(tempPassword);
             } else {
+                // Clear password field if entered incorrectly
                 LoginMenu.statusLabel.setText("Incorrect password\n");
                 LoginMenu.passwordField.setText("");
                 return false;
@@ -198,7 +200,7 @@ public class Account {
             LoginMenu.passwordField.setText("");
             return false;
         }
-        LoginMenu.statusLabel.setText("Logged in: " + this.username);
+        LoginMenu.statusLabel.setText("Logged in: " + getUsername());
         return true;
     }
     
@@ -236,7 +238,7 @@ public class Account {
         this.balanceETH = Float.parseFloat(fileReader.nextLine());
     }
     /**
-     * Display account info.
+     * Display account info to console. 
      */
     public void printAccountInfo() {
         DecimalFormat df = new DecimalFormat("#.########");
@@ -253,6 +255,30 @@ public class Account {
      */
     public void testBuyBitcoin(CurrencyInfo currentCurrency) {
         this.balanceUSD -= 100;
-        this.balanceBTC += (100 / currentCurrency.price);
+        this.balanceBTC += (100 / currentCurrency.getPrice());
+    }
+    
+    /**
+     * gets account username
+     * @return username
+     */
+    public String getUsername() {
+        return this.username;
+    }
+    
+    /**
+     * sets account username
+     * @param username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * sets account password
+     * @param password that has been encoded
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

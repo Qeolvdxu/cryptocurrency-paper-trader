@@ -28,12 +28,10 @@
               <EmptySpace min="-2" pref="234" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="statusLabel" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="passwordField" max="32767" attributes="0"/>
-                      <Component id="usernameField" max="32767" attributes="0"/>
-                      <Component id="createAccountButton" max="32767" attributes="0"/>
-                      <Component id="loginButton" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="passwordField" max="32767" attributes="0"/>
+                  <Component id="usernameField" max="32767" attributes="0"/>
+                  <Component id="createAccountButton" max="32767" attributes="0"/>
+                  <Component id="loginButton" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="243" max="32767" attributes="0"/>
           </Group>

@@ -89,9 +89,9 @@ public class TradingReferee {
      */
     public void dashboardMenu() {
         System.out.println("-- Dashboard Menu --");
-        System.out.println("-- User: " + user.username + " --");
+        System.out.println("-- User: " + user.getUsername() + " --");
         System.out.println(
-            "1) Select Cryptocurrency - Current Selection: " + currentCurrency.name + "\n" +
+            "1) Select Cryptocurrency - Current Selection: " + currentCurrency.getName() + "\n" +
             "2) View Account Info\n" +
             "3) Place Order\n" +
             "4) Log out\n" +
@@ -135,7 +135,7 @@ public class TradingReferee {
      */
     public void selectCryptoMenu() {
         System.out.println("\n-- Select Cryptocurrency Menu --");
-        System.out.println("Selected: " + currentCurrency.name);
+        System.out.println("Selected: " + currentCurrency.getName());
         
         System.out.println(
             "1) Bitcoin, BTC\n" +
