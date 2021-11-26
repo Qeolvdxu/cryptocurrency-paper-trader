@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
@@ -21,14 +22,14 @@ public class Account {
     public double balanceUSD;
     public double balanceBTC;
     public double balanceETH;
-    private ArrayList<Order> orderArray;
+    public ArrayList<Order> orderArray = new ArrayList<Order>();
     private File accountFile;
     
     public Account() {
         // Default values for an account
         this.username = "";
         this.password = "";
-        this.balanceUSD = 1000.00000000;
+        this.balanceUSD = 100000.00000000;
         this.balanceBTC = 0.00000000;
         this.balanceETH = 0.00000000;
     }
@@ -221,9 +222,12 @@ public class Account {
     public void saveAccountInfo() throws IOException{
         FileWriter writer = new FileWriter(accountFile);
         writer.write(username + ":" + password + "\n");
-        writer.write(balanceUSD + "\n");
-        writer.write(balanceBTC + "\n");
-        writer.write(balanceETH + "\n");
+        writer.write(String.format("%.8f", new BigDecimal(this.balanceUSD)) + "\n");
+        writer.write(String.format("%.8f", new BigDecimal(this.balanceBTC)) + "\n");
+        writer.write(String.format("%.8f", new BigDecimal(this.balanceETH)) + "\n");
+        for (Order o : orderArray) {
+            writer.write(o.printOrder() + "\n");
+        }
         writer.close();
     }
     /**
@@ -231,17 +235,28 @@ public class Account {
      * @throws IOException if file cant be read.
      */
     public void loadAccountInfo() throws IOException{
+        // Load user credentials
         Scanner fileReader = new Scanner(accountFile);
         String accountInfo = fileReader.nextLine();
-        this.balanceUSD = Float.parseFloat(fileReader.nextLine());
-        this.balanceBTC = Float.parseFloat(fileReader.nextLine());
-        this.balanceETH = Float.parseFloat(fileReader.nextLine());
+        // Load balances
+        this.balanceUSD = Double.parseDouble(fileReader.nextLine());
+        this.balanceBTC = Double.parseDouble(fileReader.nextLine());
+        this.balanceETH = Double.parseDouble(fileReader.nextLine());
+        // Load orders
+        this.orderArray.clear();
+        while (fileReader.hasNextLine()) {
+            String line = fileReader.nextLine();
+            String[] lineArray = line.split(",");
+            CurrencyInfo crypto = new CurrencyInfo(lineArray[1]);
+            Order o = new Order(lineArray[0], crypto, Float.parseFloat(lineArray[2]));
+            this.orderArray.add(o);
+        }
     }
     /**
      * Display account info to console. 
      */
     public void printAccountInfo() {
-        DecimalFormat df = new DecimalFormat("#.########");
+        DecimalFormat df = new DecimalFormat("0.00000000");
         
         System.out.println("\n-- Balances -- ");
         System.out.println("USD:" + df.format(this.balanceUSD));
@@ -256,6 +271,45 @@ public class Account {
     public void testBuyBitcoin(CurrencyInfo currentCurrency) {
         this.balanceUSD -= 100;
         this.balanceBTC += (100 / currentCurrency.getPrice());
+    }
+    
+    public void addOrder(Order o) {
+        this.orderArray.add(o);
+    }
+    
+    public void execOrder(Order o) {
+        if (o.getType().equals("Buy")) {
+            switch (o.getCurrency().getSymbol()) {
+                case "BTC-USD":
+                    this.balanceBTC += o.getQuantity();
+                    this.balanceUSD -= o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+                case "ETH-USD":
+                    this.balanceETH += o.getQuantity();
+                    this.balanceUSD -= o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+                case "BTC-ETH":
+                    this.balanceBTC += o.getQuantity();
+                    this.balanceETH -= o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+            } 
+        } else {
+            switch (o.getCurrency().getSymbol()) {
+                case "BTC-USD":
+                    this.balanceBTC -= o.getQuantity();
+                    this.balanceUSD += o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+                case "ETH-USD":
+                    this.balanceETH -= o.getQuantity();
+                    this.balanceUSD += o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+                case "BTC-ETH":
+                    this.balanceBTC -= o.getQuantity();
+                    this.balanceETH += o.getQuantity() * o.getCurrency().getPrice();
+                    break;
+        
+            }
+        }
     }
     
     /**

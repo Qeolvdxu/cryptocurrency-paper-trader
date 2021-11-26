@@ -1,6 +1,7 @@
 package com.mycompany.cs321.project;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,10 +43,16 @@ public class DashboardMenu extends javax.swing.JFrame {
         // Show who is logged in
         userLabel.setText(currentUser.getUsername());
         // Format balance display labels with 8 decimal places
-        DecimalFormat df = new DecimalFormat("#.########");
+        DecimalFormat df = new DecimalFormat("0.0000000");
         usdBalanceLabel.setText("USD: " + df.format(currentUser.balanceUSD));
         btcBalanceLabel.setText("BTC: " + df.format(currentUser.balanceBTC));
         ethBalanceLabel.setText("ETH: " + df.format(currentUser.balanceETH));
+        // Add orders to screen
+        ordersTextArea.setText("");
+        for (Order o : currentUser.orderArray) {
+            ordersTextArea.append(o.printOrder() + "\n");
+        }
+        
     }
 
     /**
@@ -57,37 +64,34 @@ public class DashboardMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        selectCryptoComboBox = new javax.swing.JComboBox<>();
-        selectCryptoLabel = new javax.swing.JLabel();
-        selectCryptoLabel1 = new javax.swing.JLabel();
-        logoutButton = new javax.swing.JButton();
-        userLabel = new javax.swing.JLabel();
+        orderTypeGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         usdBalanceLabel = new javax.swing.JLabel();
         btcBalanceLabel = new javax.swing.JLabel();
         ethBalanceLabel = new javax.swing.JLabel();
-        testBuyBitcoinButton = new javax.swing.JButton();
-        balanceLabel = new javax.swing.JLabel();
+        balanceLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        orderLabel = new javax.swing.JLabel();
+        pairTitleLabel = new javax.swing.JLabel();
+        quantityTextField = new javax.swing.JTextField();
+        quantityTitleLabel = new javax.swing.JLabel();
+        orderButton = new javax.swing.JButton();
+        selectedPairTitleLabel = new javax.swing.JLabel();
+        quantityUSDLabel = new javax.swing.JLabel();
+        selectCryptoComboBox = new javax.swing.JComboBox<>();
+        sellRadioButton = new javax.swing.JRadioButton();
+        buyRadioButton = new javax.swing.JRadioButton();
+        selectCryptoLabel = new javax.swing.JLabel();
+        ordersListPanel = new javax.swing.JPanel();
+        ordersTitleLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ordersTextArea = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
+        userLabel = new javax.swing.JLabel();
+        logoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        selectCryptoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "BTC", "ETH" }));
-        selectCryptoComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectCryptoComboBoxActionPerformed(evt);
-            }
-        });
-
-        selectCryptoLabel1.setText("Select Cryptocurrency: ");
-
-        logoutButton.setText("Logout");
-        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logoutButtonMouseClicked(evt);
-            }
-        });
-
-        userLabel.setText("name");
+        setTitle("Dashboard");
 
         usdBalanceLabel.setText("USD:");
 
@@ -95,13 +99,8 @@ public class DashboardMenu extends javax.swing.JFrame {
 
         ethBalanceLabel.setText("ETH: ");
 
-        testBuyBitcoinButton.setText("Test Buy $100 BTC");
-        testBuyBitcoinButton.setToolTipText("");
-        testBuyBitcoinButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                testBuyBitcoinButtonMouseClicked(evt);
-            }
-        });
+        balanceLabel1.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
+        balanceLabel1.setText("Balances:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -115,64 +114,203 @@ public class DashboardMenu extends javax.swing.JFrame {
                     .addComponent(ethBalanceLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(testBuyBitcoinButton)
-                .addGap(0, 14, Short.MAX_VALUE))
+                .addComponent(balanceLabel1)
+                .addGap(0, 98, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(balanceLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(usdBalanceLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btcBalanceLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ethBalanceLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(testBuyBitcoinButton)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(100, 100, 100))
         );
 
-        balanceLabel.setText("Balances:");
+        orderLabel.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
+        orderLabel.setText("Order:");
+
+        pairTitleLabel.setText("Pair:");
+
+        quantityTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                quantityTextFieldKeyTyped(evt);
+            }
+        });
+
+        quantityTitleLabel.setText("Quantity:");
+
+        orderButton.setText("Place Order");
+        orderButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orderButtonMouseClicked(evt);
+            }
+        });
+
+        selectedPairTitleLabel.setText("Price:");
+
+        selectCryptoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "BTC-USD", "ETH-USD", "BTC-ETH" }));
+        selectCryptoComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectCryptoComboBoxActionPerformed(evt);
+            }
+        });
+
+        orderTypeGroup.add(sellRadioButton);
+        sellRadioButton.setText("Sell");
+
+        orderTypeGroup.add(buyRadioButton);
+        buyRadioButton.setSelected(true);
+        buyRadioButton.setText("Buy");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(orderLabel)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(pairTitleLabel)
+                                    .addComponent(selectedPairTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(selectCryptoLabel)
+                                    .addComponent(selectCryptoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(buyRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sellRadioButton))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(quantityTitleLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(quantityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(orderButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(quantityUSDLabel))))))
+                .addGap(42, 76, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(orderLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buyRadioButton)
+                    .addComponent(sellRadioButton))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pairTitleLabel)
+                    .addComponent(selectCryptoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectedPairTitleLabel)
+                    .addComponent(selectCryptoLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quantityTitleLabel)
+                    .addComponent(quantityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(quantityUSDLabel)
+                    .addComponent(orderButton))
+                .addGap(79, 79, 79))
+        );
+
+        ordersTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
+        ordersTitleLabel.setText("Order History:");
+
+        ordersTextArea.setEditable(false);
+        ordersTextArea.setColumns(20);
+        ordersTextArea.setRows(5);
+        jScrollPane1.setViewportView(ordersTextArea);
+
+        javax.swing.GroupLayout ordersListPanelLayout = new javax.swing.GroupLayout(ordersListPanel);
+        ordersListPanel.setLayout(ordersListPanelLayout);
+        ordersListPanelLayout.setHorizontalGroup(
+            ordersListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ordersListPanelLayout.createSequentialGroup()
+                .addComponent(ordersTitleLabel)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(ordersListPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        ordersListPanelLayout.setVerticalGroup(
+            ordersListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ordersListPanelLayout.createSequentialGroup()
+                .addComponent(ordersTitleLabel)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 28, Short.MAX_VALUE))
+        );
+
+        userLabel.setText("name");
+
+        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
+        logoutButton.setText("Logout");
+        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutButtonMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logoutButton)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(userLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(logoutButton)
+                .addGap(5, 5, 5)
+                .addComponent(userLabel)
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(selectCryptoLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(selectCryptoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(selectCryptoLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 417, Short.MAX_VALUE)
-                        .addComponent(userLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(logoutButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(balanceLabel)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(28, 28, 28))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(ordersListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(selectCryptoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selectCryptoLabel)
-                    .addComponent(selectCryptoLabel1)
-                    .addComponent(logoutButton)
-                    .addComponent(userLabel))
-                .addGap(8, 8, 8)
-                .addComponent(balanceLabel)
-                .addGap(4, 4, 4)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(338, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ordersListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -186,13 +324,17 @@ public class DashboardMenu extends javax.swing.JFrame {
                 currentCurrency = null;
                 this.selectCryptoLabel.setText("");
                 break;
-            case 1: // BTC
+            case 1: // BTC-USD
                 currentCurrency = new CurrencyInfo(selection);
-                this.selectCryptoLabel.setText(currentCurrency.getName() + ": $" + currentCurrency.getPrice());
+                this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
                 break;
-            case 2: // ETH
+            case 2: // ETH-USD
                 currentCurrency = new CurrencyInfo(selection);
-                this.selectCryptoLabel.setText(currentCurrency.getName() + ": $" + currentCurrency.getPrice());
+                this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
+                break;
+            case 3: // BTC-ETH
+                currentCurrency = new CurrencyInfo(selection);
+                this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
                 break;
         }   
     }//GEN-LAST:event_selectCryptoComboBoxActionPerformed
@@ -208,19 +350,36 @@ public class DashboardMenu extends javax.swing.JFrame {
         log.setVisible(true);
     }//GEN-LAST:event_logoutButtonMouseClicked
     
-    /**
-     * Test to emulate a trade of buying $100 of bitcoin
-     * @param evt MouseEvent from test buying bitcoin button being clicked
-     */
-    private void testBuyBitcoinButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_testBuyBitcoinButtonMouseClicked
-        currentUser.testBuyBitcoin(currentCurrency);
-        updateAccountInfo();
+    private void quantityTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTextFieldKeyTyped
+//            // Convert currency quantity into USD equivalent
+//            System.out.println("something typed");
+//            System.out.println(Float.parseFloat(quantityTextField.getText()));
+//            System.out.println(currentCurrency.getPrice());
+//            quantityUSDLabel.setText(String.valueOf(Float.parseFloat(quantityTextField.getText())/currentCurrency.getPrice()));
+    }//GEN-LAST:event_quantityTextFieldKeyTyped
+
+    private void orderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderButtonMouseClicked
+        if (buyRadioButton.isSelected()) {
+            Order o = new Order("Buy", currentCurrency, Double.parseDouble(quantityTextField.getText()));
+            currentUser.addOrder(o);
+            currentUser.execOrder(o);
+        } else if (sellRadioButton.isSelected()){
+            Order o = new Order("Sell", currentCurrency, Double.parseDouble(quantityTextField.getText())); 
+            currentUser.addOrder(o);
+            currentUser.execOrder(o);
+        }
         try {
             currentUser.saveAccountInfo();
         } catch (IOException ex) {
             Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_testBuyBitcoinButtonMouseClicked
+        try {
+            currentUser.loadAccountInfo();
+        } catch (IOException ex) {
+            Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        updateAccountInfo();
+    }//GEN-LAST:event_orderButtonMouseClicked
     
 //    /**
 //     * Unused main method, the form is started from LoginMenu on successful login. 
@@ -260,15 +419,29 @@ public class DashboardMenu extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel balanceLabel;
+    private javax.swing.JLabel balanceLabel1;
     private javax.swing.JLabel btcBalanceLabel;
+    private javax.swing.JRadioButton buyRadioButton;
     private javax.swing.JLabel ethBalanceLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JButton orderButton;
+    private javax.swing.JLabel orderLabel;
+    private javax.swing.ButtonGroup orderTypeGroup;
+    private javax.swing.JPanel ordersListPanel;
+    private javax.swing.JTextArea ordersTextArea;
+    private javax.swing.JLabel ordersTitleLabel;
+    private javax.swing.JLabel pairTitleLabel;
+    private javax.swing.JTextField quantityTextField;
+    private javax.swing.JLabel quantityTitleLabel;
+    private javax.swing.JLabel quantityUSDLabel;
     private javax.swing.JComboBox<String> selectCryptoComboBox;
     private javax.swing.JLabel selectCryptoLabel;
-    private javax.swing.JLabel selectCryptoLabel1;
-    private javax.swing.JButton testBuyBitcoinButton;
+    private javax.swing.JLabel selectedPairTitleLabel;
+    private javax.swing.JRadioButton sellRadioButton;
     private javax.swing.JLabel usdBalanceLabel;
     public javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables
