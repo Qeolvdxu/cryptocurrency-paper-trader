@@ -1,9 +1,9 @@
 package com.mycompany.cs321.project;
 
 /**
- * Class for the business logic of the trading. 
+ * Represent an order. 
  * @author Connor Stewart, ..., 
  */
-public class DataModel {
+public class Order {
     
 }
