@@ -141,6 +141,9 @@ public class LoginMenu extends javax.swing.JFrame {
                 new LoginMenu().setVisible(true);
             }
         });
+        
+        DataHandlerThread mainDataThread = new DataHandlerThread("MainDataThread",10,true);
+        mainDataThread.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

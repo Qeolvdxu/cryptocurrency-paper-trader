@@ -50,19 +50,19 @@ public class CurrencyInfo {
         DecimalFormat df = new DecimalFormat("0.0000000");
         switch (selection) {
             case 1:
-                this.name = "Bitcoin to USD";
+                this.name = "Buy Bitcoin for USD";
                 this.symbol = "BTC-USD";
                 this.price = Float.parseFloat(df.format(dataModel.getData(1)));
                 break;
             case 2:
-                this.name = "Ethereum to USD";
+                this.name = "Buy Ethereum for USD";
                 this.symbol = "ETH-USD";
                 this.price = Float.parseFloat(df.format(dataModel.getData(3)));
                 break;
             case 3:
-                this.name = "Bitcoin to Ethereum";
+                this.name = "Buy Bitcoin for Ethereum";
                 this.symbol = "BTC-ETH";
-                this.price = Float.parseFloat(df.format(13.43));
+                this.price = Float.parseFloat(df.format(dataModel.getData(1) / dataModel.getData(3)));
                 break;
             default:
                 break;
@@ -79,19 +79,19 @@ public class CurrencyInfo {
         DecimalFormat df = new DecimalFormat("0.0000000");
         switch (selection) {
             case "BTC-USD":
-                this.name = "Bitcoin to USD";
+                this.name = "Buy Bitcoin for USD";
                 this.symbol = "BTC-USD";
                 this.price = Float.parseFloat(df.format(dataModel.getData(1)));
                 break;
             case "ETH-USD":
-                this.name = "Ethereum to USD";
+                this.name = "Buy Ethereum for USD";
                 this.symbol = "ETH-USD";
                 this.price = Float.parseFloat(df.format(dataModel.getData(3)));
                 break;
             case "BTC-ETH":
-                this.name = "Bitcoin to Ethereum";
+                this.name = "Buy Bitcoin for Ethereum";
                 this.symbol = "BTC-ETH";
-                this.price = Float.parseFloat(df.format(13.43));
+                this.price = Float.parseFloat(df.format(dataModel.getData(1) / dataModel.getData(3)));
                 break;
             default:
                 break;

@@ -39,12 +39,11 @@ public class DataHandlerThread extends Thread
     private final boolean quiet;
     private final int bedtime;
     
-    private final int curNum = 3;
+    private final int curNum = 2;
     String[] curs = 
     {
-        "BTC",
-        "ETH",
-        "DOGE"
+        "BTC-USD",
+        "ETH-USD",
     };
     
     
@@ -147,15 +146,17 @@ public class DataHandlerThread extends Thread
         try {
             while (running) 
             {
-                // Sleep and wipe the file
+                // Sleep and check if file doesn't exist
                 sleep(bedtime*1000);
-                if(out.delete())
-                     out.createNewFile();
-                
-                // Attempt to open the file for appending
+                if(!out.exists()) {
+                    out.createNewFile();
+                }
+                     
+                // Attempt to open the file for writing
                 try 
-                {
-                       writerBuffer = new BufferedWriter(new FileWriter("prices_LIVE.txt", true));
+                {       
+                       // False parameter on file writer: overwrite contents with new data instead of appending. 
+                       writerBuffer = new BufferedWriter(new FileWriter("prices_LIVE.txt", false));
                 } 
                 catch (IOException ex) 
                 {
@@ -166,7 +167,7 @@ public class DataHandlerThread extends Thread
                 // Loop for each currency to write the file
                 for (i = 0; i <= (curNum*2)-1; i++)
                 {
-                      url = new URL("https://api.coinbase.com/v2/prices/" + curs[i/2] + "-USD/" + bs);
+                      url = new URL("https://api.coinbase.com/v2/prices/" + curs[i/2] + "/" + bs);
                       con = (HttpURLConnection) url.openConnection();                
                 
                       con.setRequestMethod("GET");
