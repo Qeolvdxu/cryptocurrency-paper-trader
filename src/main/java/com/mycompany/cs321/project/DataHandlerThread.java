@@ -6,6 +6,8 @@
 package com.mycompany.cs321.project;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -20,7 +22,7 @@ import java.util.logging.Logger;
  * The output is a file so that it can read and store data correctly without hardcoding values and getter functions
  * runs in the background on a seperate thread
  * Used in this program to store crypto buy and sell values
- * @author hayden
+ * @author Hayden Estes
  */
 
 
@@ -29,15 +31,26 @@ public class DataHandlerThread extends Thread
     private Thread t;
     private final String threadName;
     private boolean running = true;
+    private final boolean quiet;
+    
+    private final int curNum = 3;
+    String[] curs = 
+    {
+        "BTC",
+        "ETH",
+        "DOGE"
+    };
+    
     
     /**
      * Contructs the thread and gives it is name
      * @param name 
      */
-    DataHandlerThread(String name) 
+    DataHandlerThread(String name, boolean status) 
     {
+      quiet = status;
       threadName = name;
-      System.out.println("Creating " +  threadName );
+      if (!quiet) System.out.println("Creating " +  threadName );
     }
 
     /**
@@ -50,8 +63,7 @@ public class DataHandlerThread extends Thread
      * @throws MalformedURLException
      * @throws IOException 
      */
-    private void urlToFile(URL url, FileWriter dataWriter)  throws MalformedURLException, IOException {
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    private void urlToFile(HttpURLConnection con, BufferedWriter dataWriter)  throws MalformedURLException, IOException {
         try (dataWriter) 
         {
             con.setRequestMethod("GET");
@@ -62,13 +74,13 @@ public class DataHandlerThread extends Thread
                 StringBuilder content = new StringBuilder();
                 while ((inputLine = in.readLine()) != null)
                 {
-                    content.append(inputLine);
+                   // content.append(inputLine);
                     dataWriter.write(inputLine);
                 }
             }
-            dataWriter.write('\n');
+            dataWriter.newLine();
+
         }
-        con.disconnect();
     }
     
     /* Seperate function 
@@ -92,7 +104,7 @@ public class DataHandlerThread extends Thread
     @Override
     public void start () 
     {
-        System.out.println("Starting " +  threadName );
+        if (!quiet) System.out.println("Starting " +  threadName );
         if (t == null) 
         {
             t = new Thread (this, threadName);
@@ -118,16 +130,55 @@ public class DataHandlerThread extends Thread
     @Override
     public void run()
     {
-        FileWriter dataWriter = null;
+       FileWriter dataWriter = null;
+       BufferedWriter writerBuffer = null;
+
         try {
-            System.out.println("Running " +  threadName );
-            dataWriter = new FileWriter("prices_LIVE.txt");
-            URL btc = new URL("https://api.coinbase.com/v2/prices/BTC-USD/buy");
-            //while (running) 
-            //{
-                urlToFile(btc,dataWriter);
-            //}
-            sleep(10000);
+            dataWriter = new FileWriter("prices_LIVE.txt", true);
+            writerBuffer = new BufferedWriter(dataWriter);
+        } catch (IOException ex) {
+            if (!quiet) System.out.println(threadName + ": Unable to open file!");
+            Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            if (!quiet) System.out.println("Running " +  threadName );
+            HttpURLConnection con = null;
+
+            URL url = null;
+            int i = 0;
+            while (running) 
+            {
+                //for (i = 0; i < curNum-1; i++)
+                //{
+                      url = new URL("https://api.coinbase.com/v2/prices/" + curs[i] + "-USD/buy");
+                      con = (HttpURLConnection) url.openConnection();
+                      con.setRequestMethod("GET");
+                      int status = con.getResponseCode();
+                      try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())))
+                      {
+
+                           String inputLine;
+                           StringBuilder content = new StringBuilder();
+                           while ((inputLine = in.readLine()) != null)
+                           {
+                               content.append(inputLine);
+                               writerBuffer.write(inputLine);
+                               System.out.println(inputLine);
+                           }                   
+                      }
+                      writerBuffer.write("\n");
+                //}
+        
+                
+                //urlToFile(con,writerBuffer);
+                //urlToFile(btcB,writerBuffer);
+                //urlToFile(btcS,writerBuffer);
+                // dataWriter.write("Boots with the fur");
+                con.disconnect();
+
+                sleep(10000);
+
+            }
             
            /*  Run using seperate function
             
@@ -138,19 +189,26 @@ public class DataHandlerThread extends Thread
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
             } */
         } catch (IOException ex) {
-            System.out.println(threadName + ": Main Loop Fail");
+            if (!quiet) System.out.println(threadName + ": Main Loop Fail");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
-            System.out.println(threadName + ": Sleep Interrupted");
+            if (!quiet) System.out.println(threadName + ": Sleep Interrupted");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 dataWriter.close();
+                writerBuffer.close();
+
             } catch (IOException ex) {
-                System.out.println(threadName + ": Failed to close writer");
+                if (!quiet) System.out.println(threadName + ": Failed to close writer");
                 Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println("Thread " +  threadName + " exiting.");
+        File out = new File("prices_LIVE.txt");
+        if (!quiet)
+            System.out.println("Thread " +  threadName + " exiting.");
+        out.delete();
     }
 }
+
+
