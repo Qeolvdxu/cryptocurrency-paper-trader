@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  * Main trading dashboard menu where the business logic is executed. 
- * @author Connor Stewart, ..., 
+ * @author Connor Stewart
  */
 public class DashboardMenu extends javax.swing.JFrame {
     private Account currentUser;
@@ -44,12 +44,12 @@ public class DashboardMenu extends javax.swing.JFrame {
         userLabel.setText(currentUser.getUsername());
         // Format balance display labels with 8 decimal places
         DecimalFormat df = new DecimalFormat("0.0000000");
-        usdBalanceLabel.setText("USD: " + df.format(currentUser.balanceUSD));
-        btcBalanceLabel.setText("BTC: " + df.format(currentUser.balanceBTC));
-        ethBalanceLabel.setText("ETH: " + df.format(currentUser.balanceETH));
+        usdBalanceLabel.setText("USD: " + df.format(currentUser.getBalanceUSD()));
+        btcBalanceLabel.setText("BTC: " + df.format(currentUser.getBalanceBTC()));
+        ethBalanceLabel.setText("ETH: " + df.format(currentUser.getBalanceETH()));
         // Add orders to screen
         ordersTextArea.setText("");
-        for (Order o : currentUser.orderArray) {
+        for (Order o : currentUser.getOrderArray()) {
             ordersTextArea.append(o.printOrder() + "\n");
         }
         
@@ -82,6 +82,8 @@ public class DashboardMenu extends javax.swing.JFrame {
         sellRadioButton = new javax.swing.JRadioButton();
         buyRadioButton = new javax.swing.JRadioButton();
         selectCryptoLabel = new javax.swing.JLabel();
+        orderStatusTitleLabel = new javax.swing.JLabel();
+        orderStatusLabel = new javax.swing.JLabel();
         ordersListPanel = new javax.swing.JPanel();
         ordersTitleLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -135,12 +137,6 @@ public class DashboardMenu extends javax.swing.JFrame {
 
         pairTitleLabel.setText("Pair:");
 
-        quantityTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                quantityTextFieldKeyTyped(evt);
-            }
-        });
-
         quantityTitleLabel.setText("Quantity:");
 
         orderButton.setText("Place Order");
@@ -166,6 +162,8 @@ public class DashboardMenu extends javax.swing.JFrame {
         buyRadioButton.setSelected(true);
         buyRadioButton.setText("Buy");
 
+        orderStatusTitleLabel.setText("Status: ");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -175,7 +173,7 @@ public class DashboardMenu extends javax.swing.JFrame {
                     .addComponent(orderLabel)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(pairTitleLabel)
@@ -188,16 +186,24 @@ public class DashboardMenu extends javax.swing.JFrame {
                                 .addComponent(buyRadioButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(sellRadioButton))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(quantityTitleLabel)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(quantityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(orderButton)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(quantityUSDLabel))))))
-                .addGap(42, 76, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(quantityTitleLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(quantityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(orderStatusTitleLabel)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(orderButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(quantityUSDLabel)
+                                .addGap(70, 70, 70)))))
+                .addGap(76, 76, 76))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(orderStatusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,7 +229,11 @@ public class DashboardMenu extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(quantityUSDLabel)
                     .addComponent(orderButton))
-                .addGap(79, 79, 79))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(orderStatusTitleLabel)
+                .addGap(1, 1, 1)
+                .addComponent(orderStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
         );
 
         ordersTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
@@ -293,7 +303,7 @@ public class DashboardMenu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ordersListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -306,16 +316,22 @@ public class DashboardMenu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ordersListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * Sets the currentCurrency to the cryptocurrency selected, displays the price
+     * in the price label. 
+     * @param evt ActionEvent from selecting a cryptocurrency.
+     */
     private void selectCryptoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectCryptoComboBoxActionPerformed
         int selection = selectCryptoComboBox.getSelectedIndex();
         switch (selection) {
@@ -340,8 +356,8 @@ public class DashboardMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_selectCryptoComboBoxActionPerformed
     
     /**
-     * Closes the dashboard and returns to the login menu
-     * @param evt MouseEvent from logout button being clicked
+     * Closes the dashboard and returns to the login menu.
+     * @param evt MouseEvent from logout button being clicked.
      */
     private void logoutButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseClicked
         this.setVisible(false);
@@ -350,73 +366,80 @@ public class DashboardMenu extends javax.swing.JFrame {
         log.setVisible(true);
     }//GEN-LAST:event_logoutButtonMouseClicked
     
-    private void quantityTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantityTextFieldKeyTyped
-//            // Convert currency quantity into USD equivalent
-//            System.out.println("something typed");
-//            System.out.println(Float.parseFloat(quantityTextField.getText()));
-//            System.out.println(currentCurrency.getPrice());
-//            quantityUSDLabel.setText(String.valueOf(Float.parseFloat(quantityTextField.getText())/currentCurrency.getPrice()));
-    }//GEN-LAST:event_quantityTextFieldKeyTyped
-
-    private void orderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderButtonMouseClicked
+    /**
+     * Checks the order selection fields including if a currency is selected,
+     * if the quantity is a valid decimal, and if the user has enough balance
+     * to cover the order. Updates the status label describing what needs fixed.
+     * @return true if all conditions are valid, false if any condition is not met.
+     */
+    private boolean checkOrder() {
+        // If trading pair is not selected
+        if (!(selectCryptoComboBox.getSelectedIndex() > 0)) {
+            orderStatusLabel.setText("Select trading pair");
+            return false;
+        }
+        // If quantity is not a float
+        if (!quantityTextField.getText().matches("[+]?([0-9]*[.])?[0-9]+")) {
+            orderStatusLabel.setText("Invalid quantity");
+            return false;
+        }
+        // Check if user has enough balance to cover order
         if (buyRadioButton.isSelected()) {
             Order o = new Order("Buy", currentCurrency, Double.parseDouble(quantityTextField.getText()));
-            currentUser.addOrder(o);
-            currentUser.execOrder(o);
+            if (!currentUser.checkBalance(o)) {
+                orderStatusLabel.setText("Not enough balance to buy");
+                return false;
+            }
         } else if (sellRadioButton.isSelected()){
             Order o = new Order("Sell", currentCurrency, Double.parseDouble(quantityTextField.getText())); 
-            currentUser.addOrder(o);
-            currentUser.execOrder(o);
+            if (!currentUser.checkBalance(o)) {
+                orderStatusLabel.setText("Not enough balance to sell");
+                return false;
+            }
         }
-        try {
-            currentUser.saveAccountInfo();
-        } catch (IOException ex) {
-            Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+        // If no invalid contitions met, order will be placed
+        orderStatusLabel.setText("Valid order");
+        return true;
+    }
+    
+    /**
+     * Executes complete process of an order. First checks if the order is 
+     * valid, then adds the order to the user, then executes the order with the balance
+     * changes. Finally saves the order to the account file and then reloads
+     * the GUI with the updated information. 
+     * @param evt MouseEvent from order button being clicked. 
+     */
+    private void orderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderButtonMouseClicked
+        // Check if order is valid
+        if (checkOrder()) {
+            // Differentiate between buy and sell orders. First add order to account, the execute it.
+            if (buyRadioButton.isSelected()) {
+                Order o = new Order("Buy", currentCurrency, Double.parseDouble(quantityTextField.getText()));
+                currentUser.addOrder(o);
+                currentUser.execOrder(o);
+            } else if (sellRadioButton.isSelected()){
+                Order o = new Order("Sell", currentCurrency, Double.parseDouble(quantityTextField.getText())); 
+                currentUser.addOrder(o);
+                currentUser.execOrder(o);
+            }
+            // Save order and balance changes to file.
+            try {
+                currentUser.saveAccountInfo();
+            } catch (IOException ex) {
+                Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+                orderStatusLabel.setText("Problem saving orders.");
+            }
+            // Reload users orders and balances from file.
+            try {
+                currentUser.loadAccountInfo();
+            } catch (IOException ex) {
+                Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+                orderStatusLabel.setText("Problem loading saved orders.");
+            }
+            // Update GUI with new account information. 
+            updateAccountInfo();        
         }
-        try {
-            currentUser.loadAccountInfo();
-        } catch (IOException ex) {
-            Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        updateAccountInfo();
     }//GEN-LAST:event_orderButtonMouseClicked
-    
-//    /**
-//     * Unused main method, the form is started from LoginMenu on successful login. 
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(DashboardMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(DashboardMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(DashboardMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(DashboardMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new DashboardMenu().setVisible(true);
-//            }
-//        });
-//    }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel balanceLabel1;
@@ -430,6 +453,8 @@ public class DashboardMenu extends javax.swing.JFrame {
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton orderButton;
     private javax.swing.JLabel orderLabel;
+    private javax.swing.JLabel orderStatusLabel;
+    private javax.swing.JLabel orderStatusTitleLabel;
     private javax.swing.ButtonGroup orderTypeGroup;
     private javax.swing.JPanel ordersListPanel;
     private javax.swing.JTextArea ordersTextArea;

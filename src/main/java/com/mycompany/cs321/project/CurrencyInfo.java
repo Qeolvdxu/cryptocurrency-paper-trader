@@ -1,10 +1,10 @@
 package com.mycompany.cs321.project;
 
-import java.text.DecimalFormat;
+import java.text.DecimalFormat; // Formatting currency price
 
 /**
- *
- * @author Connor Stewart, ..., 
+ * Represents a cryptocurrency trading pair which information is updated real-time from the API.
+ * @author Connor Stewart 
  */
 public class CurrencyInfo {
     
@@ -13,14 +13,14 @@ public class CurrencyInfo {
     private double price;
     
     /**
-     * Initializes cryptocurrency based upon the API. 
+     * Initializes cryptocurrency pair based upon the API using the pair ID.
      * @param selection the cryptocurrency the user selects.
      */
     public CurrencyInfo(int selection) {
         getAPIInfo(selection);
     }
     /**
-     * Initializes cryptocurrency based upon the API. 
+     * Initializes cryptocurrency pair based upon the API using the pair name.  
      * @param selection the cryptocurrency the user selects.
      */
     public CurrencyInfo(String selection) {
@@ -89,15 +89,25 @@ public class CurrencyInfo {
                 break;
         }
     }
-    
+    /**
+     * Get cryptocurrency trading pair name in the form "FullNameX to FullNameY".
+     * @return Cryptocurrency name.
+     */
     public String getName() {
         return this.name; 
     }
-    
+    /**
+     * Get cryptocurrency trading pair name in the form "SymbolX-SymbolY".
+     * @return Cryptocurrency symbol.
+     */
     public String getSymbol() {
         return this.symbol; 
     }
     
+    /**
+     * Get cryptocurrency trading pair price.
+     * @return Cryptocurrency price.
+     */
     public double getPrice() {
         return this.price; 
     }

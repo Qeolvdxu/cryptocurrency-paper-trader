@@ -2,7 +2,7 @@ package com.mycompany.cs321.project;
 
 /**
  * Initial menu displayed when program starts to handle account creation and login. 
- * @author Connor Stewart, ..., 
+ * @author Connor Stewart 
  */
 public class LoginMenu extends javax.swing.JFrame {
     Account user = new Account();
@@ -100,6 +100,7 @@ public class LoginMenu extends javax.swing.JFrame {
      */
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
         if (user.logIn(usernameField.getText(), passwordField.getText())) {
+            // Switch to dashboard menu
             this.setVisible(false);
             DashboardMenu dash = new DashboardMenu(user);
             dash.setVisible(true);
@@ -107,7 +108,8 @@ public class LoginMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_loginButtonMouseClicked
 
     /**
-     * Main method to start GUI form of program.      * @param args the command line arguments
+     * Main method to start GUI form of program.      
+     * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
