@@ -46,12 +46,22 @@ public class DataModel {
      * Returns the buying price of Bitcoin
      * Reads from the file prices_LIVE.txt
      * the file is updated every so often by the DataHandlerThread
+     * 
+     * Current Hardcoded Key:
+     * 1 : BTC Buy
+     * 2 : BTC Sell
+     * 3 : ETH Buy
+     * 4 : ETH Sell
+     * 5 : DOGE Buy
+     * 6 : DOGE Sell
+     * 
+     * @param key
      * @return
      * @throws IOException 
      */
-    public float getBTCBuy() throws IOException
+    public float getData(int key) throws IOException
     {
-        String str = getLine(0);
+        String str = getLine(key);
         str = str.replaceAll("[^\\d.]", "");
         return Float.valueOf(str);
     }

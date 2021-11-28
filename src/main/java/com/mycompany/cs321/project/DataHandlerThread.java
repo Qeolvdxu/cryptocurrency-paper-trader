@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,9 +19,19 @@ import java.util.logging.Logger;
 
 /**
  * Reads text from a url connection and outputs to a file over and over
+ * 
+ * Please refer to the constructor on how to create a DataHandlerThread
+ * 
+ * Outputs to a seperate file in the background so that the DataModel can pull the data from the same file when needed and not worry about updating
+ * 
  * The output is a file so that it can read and store data correctly without hardcoding values and getter functions
+ * 
  * runs in the background on a seperate thread
+ * 
  * Used in this program to store crypto buy and sell values
+ * 
+ * This class has been created dynamically so it is usable in any given format,
+ * even in different programs with different data!
  * @author Hayden Estes
  */
 
@@ -47,7 +55,9 @@ public class DataHandlerThread extends Thread
     
     /**
      * Contructs the thread and gives it is name
-     * @param name 
+     * wait is the number of seconds between value updating
+     * status is if the thread will output debug messages
+     * @param name , wait, status
      */
     DataHandlerThread(String name, int wait, boolean status) 
     {
@@ -95,10 +105,8 @@ public class DataHandlerThread extends Thread
     public void start () 
     {
         if (!quiet) System.out.println("Starting " +  threadName );
-        
-       // File myObj = new File("prices_LIVE.txt");
-        
-        
+                
+        // Start the thread! 
         if (t == null) 
         {
             t = new Thread (this, threadName);
@@ -113,6 +121,7 @@ public class DataHandlerThread extends Thread
      */
     public void kill()
     {
+        if (!quiet) System.out.println("Thread " +  threadName + " exiting.");
         running = false;
     }
     
@@ -120,26 +129,35 @@ public class DataHandlerThread extends Thread
     /**
      * Override of threads run, does the main function processing 
      * Runs urlToFile over and over forever unless the kill function is called
+     * Grabs data for each crypto listed in the array above, gets buying and selling each
+     * The written files writes the information on 2 lines per crypto (for buy/sell) and each crypto in order directly after
+     * This function is created to be able to dynamically change with the hardcoded array above for super easy currency changing
      * 10 seconds a sleep time between each urlToFile call
      */
     @Override
     public void run()
     {
-       BufferedWriter writerBuffer = null;
-        File out = new File("prices_LIVE.txt");
+        // Switch between Buy/Sell for url editing
         String bs = "buy";
-
         
-        try {
-            if (!quiet) System.out.println("Running " +  threadName );
-            HttpURLConnection con = null;
+        // Set up empty values to be used in the loop
+        HttpURLConnection con = null;
+        URL url = null;
+        int i = 0;
+        BufferedWriter writerBuffer = null;
+        File out = new File("prices_LIVE.txt");
 
-            URL url = null;
-            int i = 0;
+        // Loop this try block the entire time the thread is being used
+        if (!quiet) System.out.println("Running " +  threadName );
+        try {
             while (running) 
             {
+                // Sleep and wipe the file
+                sleep(bedtime*1000);
                 if(out.delete())
                      out.createNewFile();
+                
+                // Attempt to open the file for appending
                 try 
                 {
                        writerBuffer = new BufferedWriter(new FileWriter("prices_LIVE.txt", true));
@@ -150,10 +168,10 @@ public class DataHandlerThread extends Thread
                          Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);         
                 }
                 
+                // Loop for each currency to write the file
                 for (i = 0; i <= (curNum*2)-1; i++)
                 {
                       url = new URL("https://api.coinbase.com/v2/prices/" + curs[i/2] + "-USD/" + bs);
-                      System.out.println(i/2);
                       con = (HttpURLConnection) url.openConnection();                
                 
                       con.setRequestMethod("GET");
@@ -176,30 +194,35 @@ public class DataHandlerThread extends Thread
                 }
                 con.disconnect();
                 writerBuffer.close();
-
-                sleep(bedtime*1000);
-                
-
-                
-
             }
-        } catch (IOException ex) {
+        } 
+        
+        // Error handeling for main loop
+        catch (IOException ex) 
+        {
             if (!quiet) System.out.println(threadName + ": Main Loop Fail with IOEXCEPTION");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } 
+        catch (InterruptedException ex) 
+        {           
             if (!quiet) System.out.println(threadName + ": Sleep Interrupted");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
+        } 
+        finally 
+        {
+            try 
+            {
                 writerBuffer.close();
-
-            } catch (IOException ex) {
+            } 
+            catch (IOException ex) 
+            {
                 if (!quiet) System.out.println(threadName + ": Failed to close writer");
                 Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if (!quiet)
-            System.out.println("Thread " +  threadName + " exiting.");
+        
+        // Stop the thread entierly
+        kill();
     }
 }
 
