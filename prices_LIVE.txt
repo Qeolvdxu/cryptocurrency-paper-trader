@@ -1,0 +1,4 @@
+{"data":{"base":"BTC","currency":"USD","amount":"54831.67"}}
+{"data":{"base":"BTC","currency":"USD","amount":"54278.98"}}
+{"data":{"base":"ETH","currency":"USD","amount":"4103.79"}}
+{"data":{"base":"ETH","currency":"USD","amount":"4062.73"}}

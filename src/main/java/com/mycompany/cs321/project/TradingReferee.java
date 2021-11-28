@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * Holds the state of the program and 
- * @author Connor Stewart, ..., 
+ * Holds the state of the program in text based mode.
+ * @author Connor Stewart
  */
 public class TradingReferee {
     // Create account and currency for the current ones
@@ -31,7 +31,7 @@ public class TradingReferee {
     /**
      * Main program loop. Holds state of program. 
      */
-    public void run() {
+    public void run() throws IOException {
         while (true) {
             switch (state) {
                 case LOGIN_MENU:
@@ -94,9 +94,8 @@ public class TradingReferee {
             "1) Select Cryptocurrency - Current Selection: " + currentCurrency.getName() + "\n" +
             "2) View Account Info\n" +
             "3) Place Order\n" +
-            "4) Log out\n" +
-            "5) Test Buying $100 Bitcoin"
-        );
+            "4) Log out\n"
+            );
         
         int selection = userInput.nextInt();
         
@@ -117,23 +116,15 @@ public class TradingReferee {
                 System.out.println();
                 state = LOGIN_MENU;
                 break;
-            case 5:
-                user.testBuyBitcoin(currentCurrency);
-                try {
-                    // Save user info after increasing balance
-                    user.saveAccountInfo();
-                } catch (IOException e) {
-                    System.out.println("Error saving file");
-                }
-                break;  
         }  
     }
+    
     /**
      * Select cryptocurrency sub-menu. Initializes currentCurrency to the 
      * user selected cryptocurrency. 
      * TODO: Add more supported currencies. 
      */
-    public void selectCryptoMenu() {
+    public void selectCryptoMenu() throws IOException {
         System.out.println("\n-- Select Cryptocurrency Menu --");
         System.out.println("Selected: " + currentCurrency.getName());
         
@@ -160,7 +151,6 @@ public class TradingReferee {
                 state = DASHBOARD_MENU;
         } 
     }
-    
     
     /**
      * Exits the program. 
