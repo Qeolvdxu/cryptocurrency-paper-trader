@@ -2,7 +2,7 @@ package com.mycompany.cs321.project;
 
 /**
  * Initial menu displayed when program starts to handle account creation and login. 
- * @author Connor Stewart, ..., 
+ * @author Connor Stewart 
  */
 public class LoginMenu extends javax.swing.JFrame {
     Account user = new Account();
@@ -30,7 +30,7 @@ public class LoginMenu extends javax.swing.JFrame {
         loginButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Login Menu");
+        setTitle("Login");
 
         usernameField.setToolTipText("");
 
@@ -61,11 +61,10 @@ public class LoginMenu extends javax.swing.JFrame {
                 .addGap(234, 234, 234)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(passwordField)
-                        .addComponent(usernameField)
-                        .addComponent(createAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(passwordField)
+                    .addComponent(usernameField)
+                    .addComponent(createAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(243, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -101,6 +100,7 @@ public class LoginMenu extends javax.swing.JFrame {
      */
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
         if (user.logIn(usernameField.getText(), passwordField.getText())) {
+            // Switch to dashboard menu
             this.setVisible(false);
             DashboardMenu dash = new DashboardMenu(user);
             dash.setVisible(true);
@@ -108,7 +108,7 @@ public class LoginMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_loginButtonMouseClicked
 
     /**
-     * Main method to start GUI form of program. 
+     * Main method to start GUI form of program.      
      * @param args the command line arguments
      */
     public static void main(String args[]) {
