@@ -1,6 +1,0 @@
-{"data":{"base":"BTC","currency":"USD","amount":"54462.95"}}
-{"data":{"base":"BTC","currency":"USD","amount":"53903.20"}}
-{"data":{"base":"ETH","currency":"USD","amount":"4091.82"}}
-{"data":{"base":"ETH","currency":"USD","amount":"4049.74"}}
-{"data":{"base":"DOGE","currency":"USD","amount":"0.20"}}
-{"data":{"base":"DOGE","currency":"USD","amount":"0.20"}}
