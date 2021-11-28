@@ -153,7 +153,6 @@ public class DataHandlerThread extends Thread
                 for (i = 0; i <= (curNum*2)-1; i++)
                 {
                       url = new URL("https://api.coinbase.com/v2/prices/" + curs[i/2] + "-USD/" + bs);
-                      System.out.println(i/2);
                       con = (HttpURLConnection) url.openConnection();                
                 
                       con.setRequestMethod("GET");
