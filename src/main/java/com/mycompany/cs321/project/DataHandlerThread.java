@@ -34,6 +34,7 @@ public class DataHandlerThread extends Thread
     private final String threadName;
     private boolean running = true;
     private final boolean quiet;
+    private final int bedtime;
     
     private final int curNum = 3;
     String[] curs = 
@@ -48,10 +49,11 @@ public class DataHandlerThread extends Thread
      * Contructs the thread and gives it is name
      * @param name 
      */
-    DataHandlerThread(String name, boolean status) 
+    DataHandlerThread(String name, int wait, boolean status) 
     {
       quiet = status;
       threadName = name;
+      bedtime = wait;
       if (!quiet) System.out.println("Creating " +  threadName );
     }
 
@@ -125,6 +127,7 @@ public class DataHandlerThread extends Thread
     {
        BufferedWriter writerBuffer = null;
         File out = new File("prices_LIVE.txt");
+        String bs = "buy";
 
         
         try {
@@ -135,6 +138,8 @@ public class DataHandlerThread extends Thread
             int i = 0;
             while (running) 
             {
+                if(out.delete())
+                     out.createNewFile();
                 try 
                 {
                        writerBuffer = new BufferedWriter(new FileWriter("prices_LIVE.txt", true));
@@ -145,9 +150,10 @@ public class DataHandlerThread extends Thread
                          Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);         
                 }
                 
-                //for (i = 0; i < curNum-1; i++)
-                //{
-                      url = new URL("https://api.coinbase.com/v2/prices/" + curs[i] + "-USD/buy");
+                for (i = 0; i <= (curNum*2)-1; i++)
+                {
+                      url = new URL("https://api.coinbase.com/v2/prices/" + curs[i/2] + "-USD/" + bs);
+                      System.out.println(i/2);
                       con = (HttpURLConnection) url.openConnection();                
                 
                       con.setRequestMethod("GET");
@@ -162,14 +168,20 @@ public class DataHandlerThread extends Thread
                                 writerBuffer.write(inputLine);
                             }
                       }
-               // }
-                writerBuffer.newLine();
+                      writerBuffer.newLine();
+                     if ("buy".equals(bs))
+                            bs = "sell";
+                     else
+                        bs = "buy";
+                }
                 con.disconnect();
                 writerBuffer.close();
 
-                sleep(10000);
-                if(out.delete())
-                     out.createNewFile();
+                sleep(bedtime*1000);
+                
+
+                
+
             }
         } catch (IOException ex) {
             if (!quiet) System.out.println(threadName + ": Main Loop Fail with IOEXCEPTION");
