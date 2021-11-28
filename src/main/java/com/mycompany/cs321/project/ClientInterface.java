@@ -1,5 +1,7 @@
 package com.mycompany.cs321.project;
 
+import java.io.IOException;
+
 /**
  * Main driver class that initializes the program. 
  * @author Connor Stewart, Hayden Estes
@@ -7,11 +9,11 @@ package com.mycompany.cs321.project;
 public class ClientInterface {
 
     /**
-     * Main method for creating the text based menu option.
-     * Also starts up the Main Data Thread
-     * @param args Command line arguments, not used. 
+     * Main method for creating the text based menu option.Also starts up the Main Data Thread
+     * @param args Command line arguments, not used.
+     * @throws java.io.IOException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
         // Start updating data to price_LIVE.txt every 10 seconds for BTC, ETH, and DOGE
         DataHandlerThread mainDataThread = new DataHandlerThread("MainDataThread",10,true);

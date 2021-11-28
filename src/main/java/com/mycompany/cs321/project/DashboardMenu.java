@@ -340,18 +340,39 @@ public class DashboardMenu extends javax.swing.JFrame {
                 currentCurrency = null;
                 this.selectCryptoLabel.setText("");
                 break;
-            case 1: // BTC-USD
-                currentCurrency = new CurrencyInfo(selection);
+            case 1: {
+                try {
+                    // BTC-USD
+                    currentCurrency = new CurrencyInfo(selection);
+                } catch (IOException ex) {
+                    Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
                 break;
-            case 2: // ETH-USD
-                currentCurrency = new CurrencyInfo(selection);
+
+            case 2: {
+                try {
+                    // ETH-USD
+                    currentCurrency = new CurrencyInfo(selection);
+                } catch (IOException ex) {
+                    Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
                 break;
-            case 3: // BTC-ETH
-                currentCurrency = new CurrencyInfo(selection);
+
+            case 3: {
+                try {
+                    // BTC-ETH
+                    currentCurrency = new CurrencyInfo(selection);
+                } catch (IOException ex) {
+                    Logger.getLogger(DashboardMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 this.selectCryptoLabel.setText("$" + String.format("%.8f", new BigDecimal(currentCurrency.getPrice())));
                 break;
+
         }   
     }//GEN-LAST:event_selectCryptoComboBoxActionPerformed
     

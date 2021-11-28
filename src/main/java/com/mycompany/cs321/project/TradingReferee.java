@@ -31,7 +31,7 @@ public class TradingReferee {
     /**
      * Main program loop. Holds state of program. 
      */
-    public void run() {
+    public void run() throws IOException {
         while (true) {
             switch (state) {
                 case LOGIN_MENU:
@@ -124,7 +124,7 @@ public class TradingReferee {
      * user selected cryptocurrency. 
      * TODO: Add more supported currencies. 
      */
-    public void selectCryptoMenu() {
+    public void selectCryptoMenu() throws IOException {
         System.out.println("\n-- Select Cryptocurrency Menu --");
         System.out.println("Selected: " + currentCurrency.getName());
         

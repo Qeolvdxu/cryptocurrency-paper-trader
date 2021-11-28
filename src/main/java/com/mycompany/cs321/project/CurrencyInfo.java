@@ -18,6 +18,7 @@ public class CurrencyInfo {
     /**
      * Initializes cryptocurrency pair based upon the API using the pair ID.
      * @param selection the cryptocurrency the user selects.
+     * @throws java.io.FileNotFoundException
      */
     public CurrencyInfo(int selection) throws FileNotFoundException, IOException {
         getAPIInfo(selection);
@@ -25,8 +26,9 @@ public class CurrencyInfo {
     /**
      * Initializes cryptocurrency pair based upon the API using the pair name.  
      * @param selection the cryptocurrency the user selects.
+     * @throws java.io.IOException
      */
-    public CurrencyInfo(String selection) {
+    public CurrencyInfo(String selection) throws IOException {
         getAPIInfo(selection);
     }
     /**
@@ -72,7 +74,8 @@ public class CurrencyInfo {
      * for testing. 
      * @param selection the cryptocurrency the user selects. 
      */
-    private void getAPIInfo(String selection) {
+    private void getAPIInfo(String selection) throws FileNotFoundException, IOException {
+        DataModel dataModel = new DataModel();
         DecimalFormat df = new DecimalFormat("0.0000000");
         switch (selection) {
             case "BTC-USD":
@@ -83,7 +86,7 @@ public class CurrencyInfo {
             case "ETH-USD":
                 this.name = "Ethereum to USD";
                 this.symbol = "ETH-USD";
-                this.price = Float.parseFloat(df.format(dataModel.getData(3));
+                this.price = Float.parseFloat(df.format(dataModel.getData(3)));
                 break;
             case "BTC-ETH":
                 this.name = "Bitcoin to Ethereum";
