@@ -78,12 +78,12 @@ public class CurrencyInfo {
             case "BTC-USD":
                 this.name = "Bitcoin to USD";
                 this.symbol = "BTC-USD";
-                this.price = Float.parseFloat(df.format(57278.10));
+                this.price = Float.parseFloat(df.format(dataModel.getData(1)));
                 break;
             case "ETH-USD":
                 this.name = "Ethereum to USD";
                 this.symbol = "ETH-USD";
-                this.price = Float.parseFloat(df.format(4274.55));
+                this.price = Float.parseFloat(df.format(dataModel.getData(3));
                 break;
             case "BTC-ETH":
                 this.name = "Bitcoin to Ethereum";
