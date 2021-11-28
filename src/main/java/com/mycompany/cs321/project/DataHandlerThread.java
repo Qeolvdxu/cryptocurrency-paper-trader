@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,7 +76,7 @@ public class DataHandlerThread extends Thread
                 StringBuilder content = new StringBuilder();
                 while ((inputLine = in.readLine()) != null)
                 {
-                   // content.append(inputLine);
+                    content.append(inputLine);
                     dataWriter.write(inputLine);
                 }
             }
@@ -82,20 +84,6 @@ public class DataHandlerThread extends Thread
 
         }
     }
-    
-    /* Seperate function 
-    
-    public void writeDataFileLoop() throws MalformedURLException, IOException 
-    {
-        FileWriter dataWriter = new FileWriter("prices_LIVE.txt");
-        URL btc = new URL("https://api.coinbase.com/v2/prices/BTC-USD/buy");
-        while (true)
-        {
-            urlToFile(btc,dataWriter);
-        }
-        // Add more currencys here
-    }*/
-    
     
     /**
      * Starts the threat, setting up the private t value
@@ -105,11 +93,16 @@ public class DataHandlerThread extends Thread
     public void start () 
     {
         if (!quiet) System.out.println("Starting " +  threadName );
+        
+       // File myObj = new File("prices_LIVE.txt");
+        
+        
         if (t == null) 
         {
             t = new Thread (this, threadName);
             t.start ();
         }
+        
     }
 
     /**
@@ -130,16 +123,10 @@ public class DataHandlerThread extends Thread
     @Override
     public void run()
     {
-       FileWriter dataWriter = null;
        BufferedWriter writerBuffer = null;
+        File out = new File("prices_LIVE.txt");
 
-        try {
-            dataWriter = new FileWriter("prices_LIVE.txt", true);
-            writerBuffer = new BufferedWriter(dataWriter);
-        } catch (IOException ex) {
-            if (!quiet) System.out.println(threadName + ": Unable to open file!");
-            Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         try {
             if (!quiet) System.out.println("Running " +  threadName );
             HttpURLConnection con = null;
@@ -148,55 +135,50 @@ public class DataHandlerThread extends Thread
             int i = 0;
             while (running) 
             {
+                try 
+                {
+                       writerBuffer = new BufferedWriter(new FileWriter("prices_LIVE.txt", true));
+                } 
+                catch (IOException ex) 
+                {
+                     if (!quiet) System.out.println(threadName + ": Unable to open file!");
+                         Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);         
+                }
+                
                 //for (i = 0; i < curNum-1; i++)
                 //{
                       url = new URL("https://api.coinbase.com/v2/prices/" + curs[i] + "-USD/buy");
-                      con = (HttpURLConnection) url.openConnection();
+                      con = (HttpURLConnection) url.openConnection();                
+                
                       con.setRequestMethod("GET");
                       int status = con.getResponseCode();
                       try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())))
                       {
-
-                           String inputLine;
-                           StringBuilder content = new StringBuilder();
-                           while ((inputLine = in.readLine()) != null)
-                           {
-                               content.append(inputLine);
-                               writerBuffer.write(inputLine);
-                               System.out.println(inputLine);
-                           }                   
+                            String inputLine;
+                            StringBuilder content = new StringBuilder();
+                            while ((inputLine = in.readLine()) != null)
+                            {
+                                content.append(inputLine);
+                                writerBuffer.write(inputLine);
+                            }
                       }
-                      writerBuffer.write("\n");
-                //}
-        
-                
-                //urlToFile(con,writerBuffer);
-                //urlToFile(btcB,writerBuffer);
-                //urlToFile(btcS,writerBuffer);
-                // dataWriter.write("Boots with the fur");
+               // }
+                writerBuffer.newLine();
                 con.disconnect();
+                writerBuffer.close();
 
                 sleep(10000);
-
+                if(out.delete())
+                     out.createNewFile();
             }
-            
-           /*  Run using seperate function
-            
-            try {
-            writeDataFileLoop();
-            } catch (IOException ex) {
-            System.out.println("Encountered IO Exception on "+threadName+" run!");
-            Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-            } */
         } catch (IOException ex) {
-            if (!quiet) System.out.println(threadName + ": Main Loop Fail");
+            if (!quiet) System.out.println(threadName + ": Main Loop Fail with IOEXCEPTION");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             if (!quiet) System.out.println(threadName + ": Sleep Interrupted");
             Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                dataWriter.close();
                 writerBuffer.close();
 
             } catch (IOException ex) {
@@ -204,10 +186,8 @@ public class DataHandlerThread extends Thread
                 Logger.getLogger(DataHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        File out = new File("prices_LIVE.txt");
         if (!quiet)
             System.out.println("Thread " +  threadName + " exiting.");
-        out.delete();
     }
 }
 

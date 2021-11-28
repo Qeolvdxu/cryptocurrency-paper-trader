@@ -38,7 +38,7 @@ public class DataModel {
         {
             r.readLine();
         }
-      //  r.close();
+       // r.close();
         return r.readLine();
     }
     
@@ -53,7 +53,6 @@ public class DataModel {
     {
         String str = getLine(0);
         str = str.replaceAll("[^\\d.]", "");
-        System.out.println(str);
         return Float.valueOf(str);
     }
 }
