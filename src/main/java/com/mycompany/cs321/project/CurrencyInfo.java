@@ -1,5 +1,8 @@
 package com.mycompany.cs321.project;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  *
  * @author Connor Stewart, ..., 
@@ -14,7 +17,7 @@ public class CurrencyInfo {
      * Initializes cryptocurrency based upon the API. 
      * @param selection the cryptocurrency the user selects.
      */
-    public CurrencyInfo(int selection) {
+    public CurrencyInfo(int selection) throws FileNotFoundException, IOException {
         getAPIInfo(selection);
     }
     /**
@@ -30,15 +33,16 @@ public class CurrencyInfo {
      * for testing. 
      * @param selection the cryptocurrency the user selects. 
      */
-    private void getAPIInfo(int selection) {
+    private void getAPIInfo(int selection) throws FileNotFoundException, IOException {
+        DataModel dataModel = new DataModel();
         if (selection == 1) {
             this.name = "Bitcoin";
-            this.symbol = "BTC";
-            this.price = 59944.70;
+            this.symbol = "BTC";        
+            this.price = dataModel.getData(1);
         } else if (selection == 2) {
             this.name = "Ethereum";
             this.symbol = "ETH";
-            this.price = 4386.39;
+            this.price = dataModel.getData(3);
         }
     }
     
