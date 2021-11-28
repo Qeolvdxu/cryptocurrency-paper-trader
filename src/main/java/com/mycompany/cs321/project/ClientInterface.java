@@ -7,8 +7,8 @@ package com.mycompany.cs321.project;
 public class ClientInterface {
 
     /**
-     *
-     * @param args
+     * Main method for creating the text based menu option.
+     * @param args Command line arguments, not used. 
      */
     public static void main(String[] args) {
         TradingReferee trade = new TradingReferee();
