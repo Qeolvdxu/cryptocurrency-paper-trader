@@ -44,7 +44,6 @@ public class DashboardMenu extends javax.swing.JFrame {
             @Override
             public void run() {
                 update();
-                System.out.println("Update ");
             }
         } , 0, 5, TimeUnit.SECONDS);
     }
