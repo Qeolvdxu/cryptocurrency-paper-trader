@@ -6,11 +6,13 @@ package com.mycompany.cs321.project;
  */
 public class LoginMenu extends javax.swing.JFrame {
     Account user = new Account();
-    
+    DataHandlerThread mainDataThread = null;
     /**
      * Creates new form LoginMenu
      */
     public LoginMenu() {
+        mainDataThread = new DataHandlerThread("MainDataThread",10,true);
+        mainDataThread.start();
         initComponents();
     }
 
@@ -28,6 +30,7 @@ public class LoginMenu extends javax.swing.JFrame {
         createAccountButton = new javax.swing.JButton();
         statusLabel = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -53,18 +56,30 @@ public class LoginMenu extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Exit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(234, 234, 234)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(passwordField)
-                    .addComponent(usernameField)
-                    .addComponent(createAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(234, 234, 234)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(passwordField)
+                            .addComponent(usernameField)
+                            .addComponent(createAccountButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(277, 277, 277)
+                        .addComponent(jButton1)))
                 .addContainerGap(243, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -80,7 +95,9 @@ public class LoginMenu extends javax.swing.JFrame {
                 .addComponent(loginButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(statusLabel)
-                .addContainerGap(179, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addComponent(jButton1)
+                .addContainerGap(105, Short.MAX_VALUE))
         );
 
         pack();
@@ -92,6 +109,7 @@ public class LoginMenu extends javax.swing.JFrame {
     private void createAccountButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccountButtonMouseClicked
         user.createAccount(usernameField.getText(), passwordField.getText());
     }//GEN-LAST:event_createAccountButtonMouseClicked
+
     
     /**
      * Tries to login user with entered credentials upon clicking the button.
@@ -106,6 +124,11 @@ public class LoginMenu extends javax.swing.JFrame {
             dash.setVisible(true);
         }
     }//GEN-LAST:event_loginButtonMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        mainDataThread.kill();
+        System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * Main method to start GUI form of program.      
@@ -136,18 +159,15 @@ public class LoginMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginMenu().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LoginMenu().setVisible(true);
         });
-        
-        DataHandlerThread mainDataThread = new DataHandlerThread("MainDataThread",10,true);
-        mainDataThread.start();
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createAccountButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton loginButton;
     public static javax.swing.JPasswordField passwordField;
     public static javax.swing.JLabel statusLabel;
