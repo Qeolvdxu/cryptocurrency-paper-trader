@@ -47,7 +47,7 @@ public class DataModel {
      * Reads from the file prices_LIVE.txt
      * the file is updated every so often by the DataHandlerThread
      * 
-     * Current Hardcoded Key:
+     * For example...
      * 1 : BTC Buy
      * 2 : BTC Sell
      * 3 : ETH Buy

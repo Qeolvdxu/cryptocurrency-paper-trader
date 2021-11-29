@@ -1,6 +1,6 @@
 package com.mycompany.cs321.project.testFiles;
 
-import com.mycompany.cs321.project.TradingReferee;
+import com.mycompany.cs321.project.testFiles.TradingReferee;
 import java.io.IOException;
 
 /**

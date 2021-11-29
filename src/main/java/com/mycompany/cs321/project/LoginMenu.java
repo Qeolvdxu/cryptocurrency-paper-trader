@@ -11,7 +11,7 @@ public class LoginMenu extends javax.swing.JFrame {
      * Creates new form LoginMenu
      */
     public LoginMenu() {
-        mainDataThread = new DataHandlerThread("MainDataThread",10,true);
+        mainDataThread = new DataHandlerThread("MainDataThread",1,true);
         mainDataThread.start();
         initComponents();
     }
